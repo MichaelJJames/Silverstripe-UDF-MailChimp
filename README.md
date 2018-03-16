@@ -12,7 +12,7 @@ SilverStripe SS4
 ```
 composer require michaeljjames/silverstripe-udf-mailchimp
 ```
-In your /code/_config/mysite.yml
+In your /mysite/_config/mysite.yml
 
 ```YML
 MichaelJJames\UDFMailchimp\UDFMailChimpField:
