@@ -3,7 +3,7 @@
     "description": "Adds a new field to UDF to allow you to let users choose to subscribe to a mailchimp list you have choose in the admin",
     "type": "silverstripe-vendormodule",
     "homepage": "http://github.com/michaeljjames/silverstripe-udf-mailchimp",
-    "keywords": ["silverstripe", "mailchimp", "userforms", "forms"],
+    "keywords": ["silverstripe", "mailchimp", "userforms", "forms", "ss4"],
     "license": "BSD-3-Clause",
     "authors": [
         {
