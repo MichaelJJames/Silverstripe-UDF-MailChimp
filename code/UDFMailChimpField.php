@@ -6,14 +6,16 @@ namespace MichaelJJames\UDFMailchimp;
 use SilverStripe\UserForms\Model\EditableFormField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropDownField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Flushable;
 
 // Mailchimp
 use \DrewM\MailChimp\MailChimp;
 
-class UDFMailChimpField extends EditableFormField 
+class UDFMailChimpField extends EditableFormField implements Flushable
 {
 
     private static $singular_name = 'Mailchimp Opt-in Field';
@@ -27,6 +29,11 @@ class UDFMailChimpField extends EditableFormField
     private static $db = [
         'ListID' => 'Varchar(255)'
     ];
+
+    public static function flush() 
+    {
+        Injector::inst()->get(CacheInterface::class . '.myCache')->clear();
+    }
 
     public function getFormField()
     {
@@ -45,21 +52,33 @@ class UDFMailChimpField extends EditableFormField
     public function getLists() 
     {
 
-        $MailChimp = new Mailchimp($this->getApiKey());
+        $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
-        $result = $MailChimp->get('lists');
+        if($cache->has('.myCache')) {
 
-        $items = new ArrayList();
+            $items = $cache->get('.myCache');
 
-        foreach($result['lists'] as $listItem) {
-            $items->push(new ArrayData(array(
-                'ID' => $listItem['id'],
-                'Title' => $listItem['name']
-            )));
+        }else{
+
+            $MailChimp = new Mailchimp($this->getApiKey());
+
+            $result = $MailChimp->get('lists');
+
+            $items = new ArrayList();
+
+            foreach($result['lists'] as $listItem) {
+                $items->push(new ArrayData(array(
+                    'ID' => $listItem['id'],
+                    'Title' => $listItem['name']
+                )));
+            }
+
+            $cache->set('.myCache', $items);
+
         }
 
         return $items;
-	
+    
     }
 
     public function getCMSFields() 
@@ -97,7 +116,7 @@ class UDFMailChimpField extends EditableFormField
             if (filter_var($fields, FILTER_VALIDATE_EMAIL)) {
 
                 $emailAddress = $fields;
-			
+            
             }
 
         }
@@ -114,7 +133,7 @@ class UDFMailChimpField extends EditableFormField
             ]);
 
         }
-	
+    
     }
 
 }

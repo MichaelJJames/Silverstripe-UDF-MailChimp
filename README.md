@@ -18,3 +18,6 @@ In your /mysite/_config/mysite.yml
 MichaelJJames\UDFMailchimp\UDFMailChimpField:
   mailchimp_key: YOUR KEY HERE
 ```
+# MailChimp Lists
+
+If you add a new mailchimp list and it doesn't show in the CMS you may want to ?flush=1 as the lists are cached to save making the request on each page load.
