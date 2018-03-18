@@ -32,7 +32,7 @@ class UDFMailChimpField extends EditableFormField implements Flushable
 
     public static function flush() 
     {
-        Injector::inst()->get(CacheInterface::class . '.myCache')->clear();
+        Injector::inst()->get(CacheInterface::class . '.michaeljjames_udf_cache')->clear();
     }
 
     public function getFormField()
@@ -52,11 +52,11 @@ class UDFMailChimpField extends EditableFormField implements Flushable
     public function getLists() 
     {
 
-        $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+        $cache = Injector::inst()->get(CacheInterface::class . '.michaeljjames_udf_cache');
 
-        if($cache->has('.myCache')) {
+        if($cache->has('michaeljjames_udf_cache')) {
 
-            $items = $cache->get('.myCache');
+            $items = $cache->get('michaeljjames_udf_cache');
 
         }else{
 
@@ -73,7 +73,7 @@ class UDFMailChimpField extends EditableFormField implements Flushable
                 )));
             }
 
-            $cache->set('.myCache', $items);
+            $cache->set('michaeljjames_udf_cache', $items);
 
         }
 

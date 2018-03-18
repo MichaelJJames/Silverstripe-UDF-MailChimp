@@ -3,7 +3,7 @@ name: UDFMailchimp
 ---
 
 SilverStripe\Core\Injector\Injector:
-  Psr\SimpleCache\CacheInterface.myCache:
+  Psr\SimpleCache\CacheInterface.michaeljjames_udf_cache:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
-      namespace: "myCache"
+      namespace: "michaeljjames_udf_cache"
