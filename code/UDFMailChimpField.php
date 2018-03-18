@@ -22,7 +22,7 @@ class UDFMailChimpField extends EditableFormField
 
     private static $has_placeholder = false;
 
-    private static $mailchimp_key = "";
+    private static $mailchimp_key = false;
 
     private static $db = [
         'ListID' => 'Varchar(255)'
@@ -34,10 +34,18 @@ class UDFMailChimpField extends EditableFormField
         return $field;
     }
 
+    public function getApiKey() 
+    {
+        if (!$key = $this->config()->get('mailchimp_key')) {
+            throw new \RuntimeException('mailchimp_key must be set');
+        }
+        return $key;
+    }
+
     public function getLists() 
     {
 
-        $MailChimp = new MailChimp($this->config()->get('mailchimp_key'));
+        $MailChimp = new Mailchimp($this->getApiKey());
 
         $result = $MailChimp->get('lists');
 
@@ -46,7 +54,7 @@ class UDFMailChimpField extends EditableFormField
         foreach($result['lists'] as $listItem) {
             $items->push(new ArrayData(array(
                 'ID' => $listItem['id'],
-                'Name' => $listItem['name']
+                'Title' => $listItem['name']
             )));
         }
 
@@ -59,10 +67,10 @@ class UDFMailChimpField extends EditableFormField
 
         $fields = parent::getCMSFields();
 
-        $field = DropDownField::create('ListID', 'Mailchimp List', $this->getLists()->map('ID', 'Name'))->setEmptyString('(Select one)');
+        $field = DropDownField::create('ListID', 'Mailchimp List', $this->getLists()->map('ID', 'Title'))->setEmptyString('(Select one)');
 
         $fields->addFieldToTab('Root.Main', $field);
-
+        
         return $fields;
 
     }
@@ -96,7 +104,7 @@ class UDFMailChimpField extends EditableFormField
 
         if($subscribe) {
 
-            $MailChimp = new MailChimp($this->config()->get('mailchimp_key'));
+            $MailChimp = new Mailchimp($this->getApiKey());
 
             $list_id = $this->ListID;
 
