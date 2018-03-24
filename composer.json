@@ -15,7 +15,7 @@
         "issues": "http://github.com/michaeljjames/silverstripe-udf-mailchimp/issues"
     },
     "require": {
-		"silverstripe/userforms": "dev-master",
+	"silverstripe/userforms": "^5.0",
         "drewm/mailchimp-api": "^2.5"
     }
 }
